@@ -1,0 +1,25 @@
+
+<div class="file-bar">
+    <button class="btn btn-file-bar">Load File</button>
+    <button class="btn btn-file-bar">Add File</button>
+    <p class="file-bar-title">@NumeOfLines Total lines From NumOfFiles Files;  First Log - @FirstLogDateAndtime / Last Log - @LastLogDateAndtime </p>
+</div>
+
+@code   {
+    [Parameter] public int NumeOfLines { get; set; } = 0;
+    [Parameter] public int NumOfFiles { get; set; } = 0;
+    [Parameter] public string FirstLogDateAndtime { get; set; } = "N/A";
+    [Parameter] public string LastLogDateAndtime { get; set; } = "N/A";
+    [Parameter] public EventCallback OnLoadFile { get; set; }
+    [Parameter] public EventCallback OnAddFile { get; set; }
+    
+    private async Task LoadFile()
+    {
+        await OnLoadFile.InvokeAsync(null);
+    }
+    
+    private async Task AddFile()
+    {
+        await OnAddFile.InvokeAsync(null);
+    }
+}

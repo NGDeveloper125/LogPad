@@ -22,7 +22,9 @@ namespace LogPad
             // customize window
             app.MainWindow
                 .SetIconFile("favicon.ico")
-                .SetTitle("LogPad");
+                .SetTitle("LogPad")
+                .SetUseOsDefaultSize(false)
+                .SetMaximized(true);
 
             AppDomain.CurrentDomain.UnhandledException += (sender, error) =>
             {
