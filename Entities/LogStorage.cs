@@ -8,7 +8,7 @@ namespace LogPad.Entities;
 
 public record LogStorage
 {
-    public List<LogRaw> AllLogs { get; init; }
-    public List<LogRaw> FilteredLogs { get; init; }
+    public List<LogLine> AllLogs { get; init; }
+    public List<LogLine> FilteredLogs { get; init; }
 
 }

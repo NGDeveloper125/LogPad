@@ -3,8 +3,9 @@ using System;
 
 namespace LogPad.Entities;
 
-public record LogRaw
+public record LogLine
 {
+    public string SourceFileName { get; init; }
     public int LogId{ get; init; }
     public DateTime Timestamp { get; init; }
     public LogLevel LogLevel { get; init; }
