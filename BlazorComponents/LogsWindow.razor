@@ -1,0 +1,27 @@
+﻿@using LogPad.Entities
+@using Microsoft.AspNetCore.Components.QuickGrid
+
+@if(LogLines is not null || LogLines.Count > 0)
+{
+    <QuickGrid Items="LogLines.AsQueryable()" >
+        <PropertyColumn Title="Time" Property="@(logLine => logLine.Timestamp)" />
+        <PropertyColumn Title="Level" Property="@(logLine => logLine.LogLevel)" />
+        <PropertyColumn Title="Source" Property="@(logLine => logLine.SourceFileName)" />
+        <PropertyColumn Title="Component" Property="@(logLine => logLine.ComponentName)" />
+        <PropertyColumn Title="Class" Property="@(logLine => logLine.ClassName)" />
+        <PropertyColumn Title="Message" Property="@(logLine => logLine.LogMessage)" />
+    </QuickGrid>
+}
+
+@code {
+    [Parameter] public List<LogLine> LogLines { get; set; } = new List<LogLine>();
+
+    public void OnParametersSet()
+    {
+        if (LogLines is null)
+        {
+            LogLines = new List<LogLine>();
+        }
+        StateHasChanged();
+    }
+}

@@ -4,8 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LogPad.Services;
+namespace LogPad.Entities;
 
-public class LogFilterService
+public enum LogLevel
 {
+    Debug,
+    Information,
+    Warning,
+    Error,
 }

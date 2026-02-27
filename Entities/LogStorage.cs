@@ -1,14 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace LogPad.Entities;
 
-public record LogStorage
-{
-    public List<LogLine> AllLogs { get; init; }
-    public List<LogLine> FilteredLogs { get; init; }
-
-}
+public record LogStorage(List<LogLine> AllLogs, List<LogLine> FilteredLogs);
