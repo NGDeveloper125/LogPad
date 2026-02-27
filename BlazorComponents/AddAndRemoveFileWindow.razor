@@ -1,0 +1,53 @@
+﻿@using LogPad.Entities
+<div class="dialog-container">
+    <div class="dialog">
+        <div class="dialog-title">
+            <h2>Add/Remove file</h2>
+            <button class="btn btn-success ml-auto" @onclick="OnCloseWindow">X</button>
+        </div>
+
+        @if(Files.Count > 0)
+        {
+            <div>
+                <h3>files -</h3>
+                <ul>
+                    @foreach(LogFile file in Files)
+                    {
+                        <li>
+                            <input type="checkbox" @bind="@file.ToKeep" />
+                            <p>@file.FileName</p>
+                        </li>
+                    }
+                </ul>
+            </div>
+        }
+
+        <div class="dialog-buttons">
+            <button class="btn btn-add-file" @onclick="OnOpenAddFileWindow">Add File</button>
+            <button class="btn btn-add-file" @onclick="OnConfirm">Confirm</button>
+        </div>
+
+    </div>
+</div>
+
+
+@code {
+    [Parameter] public List<LogFile> Files { get; set; } = new List<LogFile>();
+    [Parameter] public EventCallback<bool> CloseWindow { get; set; }
+    [Parameter] public EventCallback OpenAddFileWindow { get; set; }
+
+    private void OnOpenAddFileWindow(MouseEventArgs args)
+    {
+        OpenAddFileWindow.InvokeAsync(null);
+    }
+
+    private void OnConfirm(MouseEventArgs args)
+    {
+        CloseWindow.InvokeAsync(true);
+    }
+
+    private void OnCloseWindow(MouseEventArgs args)
+    {
+        CloseWindow.InvokeAsync(false);
+    }
+}

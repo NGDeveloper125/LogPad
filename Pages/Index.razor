@@ -1,7 +1,91 @@
 ﻿@page "/"
+@using LogPad.BlazorComponents
+@using LogPad.Entities
+@using LogPad.Extensions
+@using LogPad.Services
+@using System.Threading.Tasks
+@inject LogFileService LogFileService
+@inject LogLineService LogLineService
+@inject LogStorageService LogStorageService
+@inject ILogger<Index> Logger
 
-<h1>Hello, world!</h1>
+<ErrorBoundary>
+    <ChildContent>
+        <FileBar OnAddOrRemoveFile="OpenAddOrRemoveFileWindow" />
+        @if (showAddAndRemoveFileWindow)
+        {
+            <AddAndRemoveFileWindow Files="@Files" CloseWindow="CloseAddAndRemoveFileWindow" OpenAddFileWindow="OpenAddFileWindow" />
+        }
 
-Welcome to your new app.
+        <LogsWindow LogLines="@LogStorage.AllLogs" />
+    </ChildContent>
+    <ErrorContent Context="exception">
+        <div style="background-color: #ffcccc; padding: 20px; margin: 10px;">
+            <h3>Error Occurred</h3>
+            <p><strong>Message:</strong> @exception.Message</p>
+            <p><strong>Type:</strong> @exception.GetType().Name</p>
+            <details>
+                <summary>Stack Trace</summary>
+                <pre>@exception.StackTrace</pre>
+            </details>
+        </div>
+    </ErrorContent>
+</ErrorBoundary>
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+
+@code {
+    public List<LogFile> Files = new List<LogFile>();
+    public LogStorage LogStorage = new LogStorage([], []);
+    public bool showAddAndRemoveFileWindow = false;
+
+    public void OpenAddOrRemoveFileWindow()
+    {
+        showAddAndRemoveFileWindow = true;
+        StateHasChanged();
+    }
+
+    public async Task CloseAddAndRemoveFileWindow(bool update)
+    {
+        if (update)
+        {
+            (List<LogFile> filesToRemove, Files) = await LogFileService.UpdateFiles(Files);
+            if (LogStorage is not null && filesToRemove.Count > 0)
+            {
+                LogStorage = await LogStorageService.RemoveLogsFromLogStorage(filesToRemove, LogStorage);
+            }
+        }
+        showAddAndRemoveFileWindow = false;
+        StateHasChanged();
+    }
+
+    public async Task OpenAddFileWindow()
+    {
+        try
+        {
+            var fileDialogResult = await LogFileService.OpenFileDialogAsync();
+            if (fileDialogResult is not null && !string.IsNullOrEmpty(fileDialogResult.Name) && !string.IsNullOrEmpty(fileDialogResult.Content))
+            {
+                var logFile = new LogFile
+                {
+                    FileName = fileDialogResult.Name,
+                    FileContent = fileDialogResult.Content.ToLines(),
+                    ToKeep = true
+                };
+
+                Files.Add(logFile);
+
+                if (LogStorage is null)
+                {
+                    LogStorage = new LogStorage([], []);
+                }
+                LogStorage = await LogStorageService.AddLogsToLogStorage(Logger, logFile, LogStorage);
+            }
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "An error occurred while opening the add file window.");
+            throw;
+        }
+    }
+}
