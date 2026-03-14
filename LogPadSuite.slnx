@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="../LogParser/LogParser/LogParser.csproj" />
+  <Project Path="../LogParser/LogParserTests/LogParserTests.csproj" />
+  <Project Path="LogPad/LogPad.csproj" />
+  <Project Path="LogPadTests/LogPadTests.csproj" Id="dcee7d03-fad9-4a9d-974a-8a556d24aee8" />
+</Solution>

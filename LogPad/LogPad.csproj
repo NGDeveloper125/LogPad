@@ -28,4 +28,8 @@
         </None>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\..\LogParser\LogParser\LogParser.csproj" />
+    </ItemGroup>
+
 </Project>
