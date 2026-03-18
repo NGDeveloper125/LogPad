@@ -27,14 +27,13 @@ public static class StringExtensions
 
     public static LogLevel GetLogLevel(this string self)
     {
-        string section = GetLineSection(self, LogLineSection.LogLevel).Trim(']').Trim('[').ToLower();
-        return section switch
+        return self.ToLower() switch
         {
             "debug" => LogLevel.Debug,
             "info" => LogLevel.Information,
             "warn" => LogLevel.Warning,
             "error" => LogLevel.Error,
-            _ => throw new ArgumentException($"Invalid log level: {section}")
+            _ => throw new ArgumentException($"Invalid log level: {self}")
         };
     }
 

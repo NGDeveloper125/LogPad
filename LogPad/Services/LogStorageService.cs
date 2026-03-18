@@ -1,10 +1,14 @@
 ﻿using LogPad.Entities;
 using LogPad.Extensions;
+using LogPad.LogParserExtensions;
+using LogParser;
+using LogParser.SectionParsers;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using LogLevel = LogPad.Entities.LogLevel;
 
 namespace LogPad.Services;
 
@@ -17,19 +21,39 @@ public class LogStorageService
         {
             try
             {
-                newLogLines.Add
-                (
-                    new LogLine
-                    (
-                        file.FileName, 
-                        Guid.NewGuid(), 
-                        line.GetTimeStamp(), 
-                        line.GetLogLevel(), 
-                        line.GetComponentName(), 
-                        line.GetClassName(), 
-                        line.GetLogMessage()
-                    )
-                );
+                ISectionParser componentAndClassSectionParser = new ComponentAndClassSectionParser();
+                List<SectionParser> sectionParsers = new List<SectionParser>()
+                {
+                    Enum.Parse<SectionParser>("DateTime"),
+                    Enum.Parse<SectionParser>("LogLevel"),
+                    Enum.Parse<SectionParser>("LogMessage")
+                };
+
+                var costumSectionParsers = new Dictionary<int, ISectionParser>
+                {
+                    { 2, componentAndClassSectionParser }
+                };
+
+                LogLineFormat logLineFormat = new LogLineFormat(sectionParsers, costumSectionParsers);
+                LogLineParserResult logLineResult = LogLineParser.BuildLogLine(line, logLineFormat);
+
+                if (!logLineResult.Success)
+                { 
+                    logger.LogWarning($"Failed to parse log line: {line} in file: {file.FileName} | error: {logLineResult.ErrorMessage}");
+                    continue;
+                }
+
+                DateTime logLineDateTime = DateTime.Parse(logLineResult.LogLineSections[0]);
+                LogLevel logLineLogLevel = logLineResult.LogLineSections[1].GetLogLevel();
+
+
+                newLogLines.Add(new LogLine(file.FileName, 
+                                            Guid.NewGuid(),
+                                            logLineDateTime,
+                                            logLineLogLevel, 
+                                            logLineResult.LogLineSections[2], 
+                                            logLineResult.LogLineSections[3],
+                                            logLineResult.LogLineSections[4]));
             }
             catch (Exception ex)
             {
