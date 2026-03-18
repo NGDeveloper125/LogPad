@@ -1,6 +1,7 @@
 using LogPad.LogParserExtensions;
 using LogParser;
 using LogParser.SectionParsers;
+using Microsoft.VisualBasic;
 
 namespace LogPadTests;
 
@@ -10,9 +11,8 @@ public class ComponentAndClassSectionParserTests
     [InlineData(new string[] { "DateTime" }, "2024-01-01 12:00:00 OnlineStore/UserService")]
     [InlineData(new string[] { "DateTime" }, "2024-01-01 12:00:00 OnlineStore UserService")]
     [InlineData(new string[] { "DateTime" }, "2024-01-01 12:00:00 OnlineStore:UserService")]
-    [InlineData(new string[] { "DateTime" }, "2024-01-01 12:00:00 OnlineStore")]
     [InlineData(new string[] { "DateTime" }, "2024-01-01 12:00:00 OnlineStore_UserService")]
-    public void BuildLogLine_ShouldBeSuccessful_WhenLogLineFormatIsInTheExpextedFormat(string[] SectionParserTypes, string logLine)
+    public void BuildLogLine_ShouldBeUnsuccessful_WhenLogLineFormatIsInTheExpextedFormat(string[] SectionParserTypes, string logLine)
     {
         ISectionParser componentAndClassSectionParser = new ComponentAndClassSectionParser();
         List<SectionParser> sectionParsers = new List<SectionParser>();
@@ -37,6 +37,8 @@ public class ComponentAndClassSectionParserTests
     [InlineData(new string[] { "DateTime", "LogLevel", "LogMessage" }, "2024-01-01 12:00:00 INFO OnlineSore.UserService - This is a log line message", 2, new string[] { "2024-01-01 12:00:00", "INFO", "OnlineSore", "UserService", "This is a log line message" })]
     [InlineData(new string[] { "LogLevel", "DateTime", "LogMessage" }, "INFO 2024-01-01 12:00:00 OnlineSore.UserService - This is a log line message", 2, new string[] { "INFO", "2024-01-01 12:00:00", "OnlineSore", "UserService", "This is a log line message" })]
     [InlineData(new string[] { "LogLevel", "DateTime", "LogMessage" }, "OnlineSore.UserService - INFO 2024-01-01 12:00:00 This is a log line message", 0, new string[] { "OnlineSore", "UserService", "INFO", "2024-01-01 12:00:00", "This is a log line message" })]
+    [InlineData(new string[] { "DateTime", "LogLevel", "LogMessage" }, "2026-02-23 04:56:26.269 [108] INFO HikRobotCameraManager - Acquired image ../CollectedImages/Camera_0\\Img_2026-02-23 04-56-26.2690_0.bmp [0]", 2, new string[] { "2026-02-23 04:56:26.269", "INFO", "HikRobotCameraManager", "", "Acquired image ../CollectedImages/Camera_0\\Img_2026-02-23 04-56-26.2690_0.bmp [0]" })]
+    [InlineData(new string[] { "DateTime", "LogLevel", "LogMessage" }, "2026-02-23 04:56:27.487 [108] INFO InterProcessComms.CommunicationClient - Axle information received from server", 2, new string[] { "2026-02-23 04:56:27.487", "INFO", "InterProcessComms", "CommunicationClient", "Axle information received from server" })]
     public void BuildLogLine_ShouldParseSectionsCorrectly_WhenLogLineFormatIsInTheExpextedFormat(string[] SectionParserTypes, string logLine, int index, string[] expectedSections)
     {
         ISectionParser componentAndClassSectionParser = new ComponentAndClassSectionParser();
