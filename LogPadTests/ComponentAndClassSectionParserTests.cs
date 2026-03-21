@@ -1,7 +1,6 @@
 using LogPad.LogParserExtensions;
 using LogParser;
 using LogParser.SectionParsers;
-using Microsoft.VisualBasic;
 
 namespace LogPadTests;
 
