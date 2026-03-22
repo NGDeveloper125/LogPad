@@ -1,7 +1,7 @@
 ﻿@using LogPad.Entities
 @using Microsoft.AspNetCore.Components.QuickGrid
 
-@if(LogLines is not null || LogLines.Count > 0)
+@if(LogLines is not null && LogLines.Count > 0)
 {
     <QuickGrid Items="LogLines.AsQueryable()" >
         <PropertyColumn Title="Time" Property="@(logLine => logLine.Timestamp)" />
@@ -11,6 +11,14 @@
         <PropertyColumn Title="Class" Property="@(logLine => logLine.ClassName)" />
         <PropertyColumn Title="Message" Property="@(logLine => logLine.LogMessage)" />
     </QuickGrid>
+}
+else
+{
+    <div class="empty-state">
+        <div class="empty-state-icon">📂</div>
+        <h3>No data available</h3>
+        <p>Please load a log file to get started</p>
+    </div>
 }
 
 @code {
