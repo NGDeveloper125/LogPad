@@ -73,10 +73,15 @@ app {
 }
 
 .btn-file-bar {
-    background-color: yellowgreen;
-    border: solid;
-    padding: 0.25rem 0.75rem;
-    flex-shrink: 0;
+    background-color: #0066cc;
+    border: 1px solid #0052a3;
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
 }
 
 .content {
