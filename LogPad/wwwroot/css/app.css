@@ -51,7 +51,7 @@ app {
     flex-direction: row;
     align-items: center;
     gap: 0.5rem;
-    justify-content: flex-start;
+    justify-content: space-between;
     margin: 0;
     padding: 0.5rem;
     border-bottom: 2px solid #333;
@@ -62,7 +62,25 @@ app {
     margin: 0;
 }
 
-.file-bar p {
+.file-bar-title {
+    font-family: 'Bodoni Poster';
+    font-size: 1.55rem;
+    font-weight: 800;
+    color: #2d3a4a;
+    letter-spacing: 0.5px;
+    padding: 0.25rem 1rem;
+    border-radius: 4px;
+    background: transparent;
+    box-shadow: none;
+    transition: color 0.2s;
+}
+
+.file-bar-paragraphs-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.file-bar-p {
     flex: 1;
     display: flex;
     align-items: center;
